@@ -34,7 +34,7 @@ export default function Home() {
         .order('nombre', { ascending: true });
 
       console.log('Supabase response:', { data, error });
-      
+
       if (error) throw error;
       setClients(data || []);
       setFilteredClients(data || []);
@@ -81,7 +81,6 @@ export default function Home() {
 
       if (error) throw error;
 
-      // Actualizar lista local
       const updatedClients = clients.map(c =>
         c.id === currentClient.id ? { ...c, puntos: newPoints } : c
       );
@@ -108,3 +107,88 @@ export default function Home() {
       </div>
 
       <div className={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="Busca un cliente por nombre o teléfono..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className={styles.searchInput}
+        />
+        <p className={styles.resultCount}>
+          {filteredClients.length} cliente{filteredClients.length !== 1 ? 's' : ''} encontrado{filteredClients.length !== 1 ? 's' : ''}
+        </p>
+      </div>
+
+      {loading ? (
+        <div className={styles.loading}>Cargando clientes...</div>
+      ) : (
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Teléfono</th>
+                <th>Puntos</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredClients.map((client, index) => (
+                <tr key={client.id} className={index % 2 === 0 ? styles.rowEven : styles.rowOdd}>
+                  <td>{client.nombre}</td>
+                  <td>{client.telefono || '-'}</td>
+                  <td className={styles.points}>{client.puntos}</td>
+                  <td className={styles.actionCell}>
+                    <button
+                      onClick={() => openModal(client)}
+                      className={styles.addButton}
+                    >
+                      +Punto
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {modalOpen && currentClient && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <h2>Agregar puntos a {currentClient.nombre}</h2>
+
+            <div className={styles.inputGroup}>
+              <label>Puntos a agregar:</label>
+              <input
+                type="number"
+                min="1"
+                max="10"
+                value={pointsToAdd}
+                onChange={(e) => setPointsToAdd(e.target.value)}
+                className={styles.numberInput}
+              />
+            </div>
+
+            <div className={styles.modalButtons}>
+              <button
+                onClick={closeModal}
+                className={styles.cancelButton}
+                disabled={addingPoints}
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleAddPoints}
+                className={styles.confirmButton}
+                disabled={addingPoints}
+              >
+                {addingPoints ? 'Guardando...' : 'Registrar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
