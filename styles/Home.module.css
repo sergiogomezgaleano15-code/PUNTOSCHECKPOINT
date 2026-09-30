@@ -276,4 +276,71 @@
   height: 15px;
   margin-bottom: 15px;
 }
+  .rowHighlighted {
+  background-color: #ff9900 !important;
+  font-weight: bold;
+}
+
+.rowNormal {
+  background-color: transparent;
+}
+
+.resetButton {
+  background-color: #ff6b35;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.resetButton:hover {
+  background-color: #e55a24;
+}
+
+.editButton {
+  background-color: #7c317c;
+  color: #ffe000;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+.editButton:hover {
+  background-color: #5a1f5a;
+}
+
+.deleteButton {
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.deleteButton:hover {
+  background-color: #b71c1c;
+}
+
+.textInput {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #7c317c;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #2a2a2a;
+  color: #ffe000;
+}
+
+.textInput:focus {
+  outline: none;
+  border-color: #ffe000;
+}
 }
