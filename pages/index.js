@@ -25,26 +25,29 @@ export default function Home() {
   }, []);
 
   const fetchClients = async () => {
-    try {
-      setLoading(true);
-      console.log('Fetching clients from Supabase...');
-      const { data, error } = await supabase
-        .from('clientes_puntos')
-        .select('*')
-        .order('nombre', { ascending: true });
+  try {
+    setLoading(true);
+    console.log('Fetching from:', supabaseUrl);
+    const { data, error } = await supabase
+      .from('clientes_puntos')
+      .select('id, nombre, telefono, puntos')
+      .order('nombre', { ascending: true });
 
-      console.log('Supabase response:', { data, error });
-
-      if (error) throw error;
-      setClients(data || []);
-      setFilteredClients(data || []);
-    } catch (error) {
-      console.error('Error fetching clients:', error);
-    } finally {
-      setLoading(false);
+    console.log('Response:', { data, error });
+    
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
     }
-  };
-
+    
+    setClients(data || []);
+    setFilteredClients(data || []);
+  } catch (error) {
+    console.error('Error fetching clients:', error);
+  } finally {
+    setLoading(false);
+  }
+};
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
