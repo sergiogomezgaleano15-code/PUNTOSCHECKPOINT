@@ -94,11 +94,20 @@
 }
 
 .rowEven {
-  background: #1d1934;
+  background-color: transparent;
 }
 
 .rowOdd {
-  background: #262537;
+  background-color: transparent;
+}
+
+.rowHighlighted {
+  background-color: #ff9900 !important;
+  font-weight: bold;
+}
+
+.rowNormal {
+  background-color: transparent;
 }
 
 .table tbody tr {
