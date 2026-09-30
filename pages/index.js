@@ -105,7 +105,7 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <div className={styles.title}>✓ CHECK POINT</div>
+       <img src="/ISOLOGO.png" alt="Check Point" className={styles.logoImage} />
         <p className={styles.subtitle}>Sistema de puntos de fidelización</p>
       </div>
 
