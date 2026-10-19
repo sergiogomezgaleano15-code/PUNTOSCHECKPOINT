@@ -63,16 +63,17 @@
 }
 
 .newButton {
-  padding: 0 18px;
+  padding: 16px 32px;
   background: #ffe000;
   color: #1a1c27;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 13px;
+  font-weight: 700;
+  font-size: 17px;
   cursor: pointer;
   white-space: nowrap;
+  box-shadow: 0 0 12px rgba(255, 224, 0, 0.35);
   transition: all 0.2s ease;
 }
 
@@ -380,7 +381,8 @@
   }
 
   .newButton {
-    padding: 12px 18px;
+    padding: 16px 18px;
+    width: 100%;
   }
 
   .table {
