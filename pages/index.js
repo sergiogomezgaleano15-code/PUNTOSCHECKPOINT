@@ -39,7 +39,8 @@ export default function Home() {
 
   // Modal de nuevo cliente
   const [newModalOpen, setNewModalOpen] = useState(false);
-  const [newData, setNewData] = useState({ nombre: '', telefono: '' });
+  const nuevoVacio = { nombre: '', telefono: '', correo: '', puntos: '' };
+  const [newData, setNewData] = useState(nuevoVacio);
   const [savingNew, setSavingNew] = useState(false);
 
   useEffect(() => {
@@ -181,27 +182,49 @@ export default function Home() {
 
   // ---------- Nuevo cliente ----------
   const openNewModal = () => {
-    setNewData({ nombre: '', telefono: '' });
+    setNewData(nuevoVacio);
     setNewModalOpen(true);
   };
 
   const closeNewModal = () => {
     setNewModalOpen(false);
-    setNewData({ nombre: '', telefono: '' });
+    setNewData(nuevoVacio);
   };
 
   const handleNewClient = async () => {
     const nombre = newData.nombre.trim();
-    const telefono = newData.telefono.trim() || null;
+    const telefono = newData.telefono.trim();
+    const correo = newData.correo.trim().toLowerCase();
+    const puntos = parseInt(newData.puntos, 10);
 
-    if (!nombre) {
-      alert('El nombre no puede estar vacío');
+    // Todos los campos son obligatorios
+    if (!nombre || !telefono || !correo || newData.puntos === '') {
+      alert('Nombre, celular, correo y puntos son obligatorios');
       return;
     }
 
-    // Evita duplicados por teléfono
-    if (telefono && clients.some((c) => c.telefono === telefono)) {
-      alert('Ya existe un cliente con ese teléfono');
+    if (!/^\d{7,15}$/.test(telefono.replace(/[\s+-]/g, ''))) {
+      alert('El número de celular no es válido');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+      alert('El correo electrónico no es válido');
+      return;
+    }
+
+    if (isNaN(puntos) || puntos < 0 || puntos > PUNTOS_META) {
+      alert(`Los puntos deben estar entre 0 y ${PUNTOS_META}`);
+      return;
+    }
+
+    // Evita duplicados por teléfono o correo
+    if (clients.some((c) => c.telefono === telefono)) {
+      alert('Ya existe un cliente con ese celular');
+      return;
+    }
+    if (clients.some((c) => c.correo && c.correo.toLowerCase() === correo)) {
+      alert('Ya existe un cliente con ese correo');
       return;
     }
 
@@ -209,7 +232,7 @@ export default function Home() {
       setSavingNew(true);
       const { data, error } = await supabase
         .from('clientes_puntos')
-        .insert({ nombre, telefono, puntos: 0 })
+        .insert({ nombre, telefono, correo, puntos })
         .select()
         .single();
 
@@ -273,7 +296,7 @@ export default function Home() {
             className={styles.searchInput}
           />
           <button onClick={openNewModal} className={styles.newButton}>
-            + Nuevo cliente
+            + Añadir cliente
           </button>
         </div>
         <p className={styles.resultCount}>
@@ -441,10 +464,11 @@ export default function Home() {
             <h2>Nuevo cliente</h2>
 
             <div className={styles.inputGroup}>
-              <label>Nombre:</label>
+              <label>Nombre *</label>
               <input
                 type="text"
                 autoFocus
+                required
                 value={newData.nombre}
                 onChange={(e) =>
                   setNewData({ ...newData, nombre: e.target.value })
@@ -454,12 +478,41 @@ export default function Home() {
             </div>
 
             <div className={styles.inputGroup}>
-              <label>Teléfono (opcional):</label>
+              <label>Número de celular *</label>
               <input
                 type="tel"
+                required
                 value={newData.telefono}
                 onChange={(e) =>
                   setNewData({ ...newData, telefono: e.target.value })
+                }
+                className={styles.textInput}
+              />
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label>Correo electrónico *</label>
+              <input
+                type="email"
+                required
+                value={newData.correo}
+                onChange={(e) =>
+                  setNewData({ ...newData, correo: e.target.value })
+                }
+                className={styles.textInput}
+              />
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label>Cantidad de puntos * (0 a {PUNTOS_META})</label>
+              <input
+                type="number"
+                required
+                min="0"
+                max={PUNTOS_META}
+                value={newData.puntos}
+                onChange={(e) =>
+                  setNewData({ ...newData, puntos: e.target.value })
                 }
                 className={styles.textInput}
               />
